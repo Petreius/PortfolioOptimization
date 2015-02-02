@@ -10,8 +10,6 @@ public class MutationSansClone {
 	public static double[] mutationElementaire(double[] v){
 		
 		
-		//BESOIN DE CLONER ?
-		//double[] v = clone(parametres);
 		double step = 0.1;
 		
 		int i = randomInt(0,v.length-1);
@@ -22,18 +20,7 @@ public class MutationSansClone {
 		return v;
 		
 	}
-	
-/*	public static double[] clone (double[] v){
-		
-		double[] w = new double[v.length];
 
-		for(int i=0; i<v.length ; i++){
-			w[i]=v[i];
-		}
-	
-		return w;
-		
-	}*/
 	
 	public static int randomInt (int deb, int fin){
 		
