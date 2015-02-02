@@ -7,7 +7,8 @@ public class BDD {
 	 * programme facilement adaptable, les methodes des autres classes appelleront
 	 * ces paramètres si besoin.
 	 * On spécifie les 3 premiers entiers (dimensions des vecteurs/matrices) et on construit
-	 * les matrices dans le constructeur de classe.
+	 * les matrices dans le constructeur de classe. La matrice matricesDesScénarios (matS) est la
+	 * matrice de Bootstrap.
 	 */
 
 	
@@ -38,10 +39,12 @@ public class BDD {
 		}
 
 		for (int i=0; i<nombreDeRealisations; i++){
+			
+			int rand = randomInt(i,matLR.length-1);
+			
 			for (int j=0 ; j<nombreDActifs ; j++){
 
-				matS[i][j] = exM.lireDoubleCellule(i, j);
-				//A MODIFIER A L AIDE DU EXCEL MANAGER
+				matS[i][j] = matLR[rand][j];
 
 			}
 		}
@@ -50,6 +53,12 @@ public class BDD {
 		BDD.setMatriceDesLogReturns(matLR);
 		BDD.setMatriceDesScenarios(matS);
 
+	}
+	
+	public static int randomInt (int deb, int fin){
+		
+		return (int)(Math.random()*(fin-deb+1)+deb);
+		
 	}
 
 	public static double[][] getMatriceDesLogReturns() {

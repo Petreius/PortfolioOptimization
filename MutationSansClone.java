@@ -21,7 +21,6 @@ public class MutationSansClone {
 		
 	}
 
-	
 	public static int randomInt (int deb, int fin){
 		
 		return (int)(Math.random()*(fin-deb+1)+deb);
