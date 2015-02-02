@@ -18,6 +18,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class ExcelManager {
 	
+	/* Classe qui s'occupe de la gestion des fichier Excel. Elle utilise la librairie Apache POI
+	 * (a importer au préalable : "poi-3.10.1-20140818.jar").
+	 * Les deux méthodes principales sont
+	 * lireDoubleCellule(i,j) : renvoie le double à la position(i,j) dans le fichier .xls
+	 * modifierCellule(i,j,value) : met value à la position (i,j) dans le fichier .xls
+	 */
+	
 	private String chemin;
 
 
