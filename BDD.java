@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 
 public class BDD {
 
@@ -6,34 +8,39 @@ public class BDD {
 	public static int nombreDeRealisations;
 	private static double[][] matriceDesLogReturns;
 	private static double[][] matriceDesScenarios;
-	
-	public BDD(int nombreDActifs, int nombreDeJours, int nombreDeRealisations){
-		
+
+	public BDD(int nombreDActifs, int nombreDeJours, int nombreDeRealisations) throws IOException{
+
 		BDD.setNombreDActifs(nombreDActifs);
-		
+
 		double [][] matLR = new double[nombreDeJours][nombreDActifs];
 		double [][] matS = new double[nombreDeRealisations][nombreDActifs];
-		
+
+		ExcelManager exM = new ExcelManager("");
+		// Modifier avec le filePath du fichier Excel.
+
 		for (int i=0; i<nombreDeJours; i++){
 			for (int j=0 ; j<nombreDActifs ; j++){
-				
-				//A REMPLIR A L AIDE DU EXCEL MANAGER
-				
+
+				matLR[i][j] = exM.lireDoubleCellule(i, j);
+				//A MODIFIER A L AIDE DU EXCEL MANAGER
+
 			}
 		}
-		
+
 		for (int i=0; i<nombreDeRealisations; i++){
 			for (int j=0 ; j<nombreDActifs ; j++){
-				
-				//A REMPLIR A L AIDE DU EXCEL MANAGER
-				
+
+				matS[i][j] = exM.lireDoubleCellule(i, j);
+				//A MODIFIER A L AIDE DU EXCEL MANAGER
+
 			}
 		}
-		
-		
+
+
 		BDD.setMatriceDesLogReturns(matLR);
 		BDD.setMatriceDesScenarios(matS);
-		
+
 	}
 
 	public static double[][] getMatriceDesLogReturns() {
@@ -59,6 +66,6 @@ public class BDD {
 	public static void setNombreDActifs(int nombreDActifs) {
 		BDD.nombreDActifs = nombreDActifs;
 	}
-	
-	
+
+
 }
