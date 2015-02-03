@@ -9,39 +9,45 @@ public class DataBase {
 	 * On spécifie les 3 premiers entiers (dimensions des vecteurs/matrices) et on construit
 	 * les matrices dans le constructeur de classe. La matrice matricesDesScénarios (matS) est la
 	 * matrice de Bootstrap.
+	 * On choisit un design pattern de type Singleton.
 	 */
 
-	
-	public static int nombreDActifs;
-	public static int nombreDeJours;
-	public static int nombreDeRealisations;
-	private static double[][] matriceDesLogReturns;
-	private static double[][] matriceDesScenarios;
 
-	
+	private DataBase(){}
+	private static DataBase uniqueInstance = new DataBase();
+	public static DataBase getInstance()
+	{	return uniqueInstance;
+	}
+
+
+	public int nombreDActifs;
+	public int nombreDeJours;
+	public int nombreDeRealisations;
+	private double[][] matriceDesLogReturns;
+	private double[][] matriceDesScenarios;
+
+
 	public DataBase(int nombreDActifs, int nombreDeJours, int nombreDeRealisations) throws IOException{
-
-		DataBase.nombreDActifs = nombreDActifs;
 
 		double [][] matLR = new double[nombreDeJours][nombreDActifs];
 		double [][] matS = new double[nombreDeRealisations][nombreDActifs];
 
-		ExcelManager exM = new ExcelManager("");
+		//ExcelManager exM = new ExcelManager("");
 		// Modifier avec le filePath du fichier Excel.
 
 		for (int i=0; i<nombreDeJours; i++){
 			for (int j=0 ; j<nombreDActifs ; j++){
 
-				matLR[i][j] = exM.lireDoubleCellule(i, j);
+				//matLR[i][j] = exM.lireDoubleCellule(i, j);
 				//A MODIFIER A L AIDE DU EXCEL MANAGER
 
 			}
 		}
 
 		for (int i=0; i<nombreDeRealisations; i++){
-			
-			int rand = randomInt(i,matLR.length-1);
-			
+
+			int rand = randomInt(0,uniqueInstance.nombreDeJours-1);
+
 			for (int j=0 ; j<nombreDActifs ; j++){
 
 				matS[i][j] = matLR[rand][j];
@@ -50,31 +56,32 @@ public class DataBase {
 		}
 
 
-		DataBase.setMatriceDesLogReturns(matLR);
-		DataBase.setMatriceDesScenarios(matS);
+		uniqueInstance.nombreDActifs = nombreDActifs;
+		uniqueInstance.setMatriceDesLogReturns(matLR);
+		uniqueInstance.setMatriceDesScenarios(matS);
 
 	}
-	
+
 	public static int randomInt (int deb, int fin){
-		
+
 		return (int)(Math.random()*(fin-deb+1)+deb);
-		
+
 	}
 
-	public static double[][] getMatriceDesLogReturns() {
+	public double[][] getMatriceDesLogReturns() {
 		return matriceDesLogReturns;
 	}
 
-	public static void setMatriceDesLogReturns(double[][] matriceDesLogReturns) {
-		DataBase.matriceDesLogReturns = matriceDesLogReturns;
+	public void setMatriceDesLogReturns(double[][] matriceDesLogReturns) {
+		this.matriceDesLogReturns = matriceDesLogReturns;
 	}
 
-	public static double[][] getMatriceDesScenarios() {
+	public double[][] getMatriceDesScenarios() {
 		return matriceDesScenarios;
 	}
 
-	public static void setMatriceDesScenarios(double[][] matriceDesScenarios) {
-		DataBase.matriceDesScenarios = matriceDesScenarios;
+	public void setMatriceDesScenarios(double[][] matriceDesScenarios) {
+		this.matriceDesScenarios = matriceDesScenarios;
 	}
 
 }

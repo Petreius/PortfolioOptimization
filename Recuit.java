@@ -13,7 +13,7 @@ public class Recuit {
 		return Math.exp((currentEnergy - newEnergy) / (K*temperature));
 	}
 	
-	public static Portfolio solution(DataBase db, double riskAversion)
+	public static Portfolio solution()
 	{
 		
 		Portfolio currentPortfolio = new Portfolio();

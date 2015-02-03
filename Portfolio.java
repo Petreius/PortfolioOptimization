@@ -11,11 +11,11 @@ public class Portfolio {
 	}
 	
 	public Portfolio(){
-		double[] randPercentages = new double[DataBase.nombreDActifs];
+		double[] randPercentages = new double[DataBase.getInstance().nombreDActifs];
 		double sum = 0;
 		for (int i=0;i<randPercentages.length-1;i++){
-			randPercentages[i]=1/randPercentages.length;
-			sum = sum + randPercentages[i];
+			randPercentages[i]= (double)((int)(1000*(1.0/(randPercentages.length))))/1000.0;
+			sum = sum + ((double)((int)(1000*randPercentages[i])))/1000.0;
 		}
 		randPercentages[randPercentages.length-1] = 1-sum;
 		
