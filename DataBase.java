@@ -29,17 +29,20 @@ public class DataBase {
 
 	public DataBase(int nombreDActifs, int nombreDeJours, int nombreDeRealisations) throws IOException{
 
+		uniqueInstance.nombreDActifs = nombreDActifs;
+		uniqueInstance.nombreDeJours = nombreDeJours;
+		uniqueInstance.nombreDeRealisations = nombreDeRealisations;
+		
 		double [][] matLR = new double[nombreDeJours][nombreDActifs];
 		double [][] matS = new double[nombreDeRealisations][nombreDActifs];
 
-		//ExcelManager exM = new ExcelManager("");
+		ExcelManager exM = new ExcelManager("/Users/thomasdoutre/Desktop/BenchmarkVAR.xls");
 		// Modifier avec le filePath du fichier Excel.
 
 		for (int i=0; i<nombreDeJours; i++){
 			for (int j=0 ; j<nombreDActifs ; j++){
 
-				//matLR[i][j] = exM.lireDoubleCellule(i, j);
-				//A MODIFIER A L AIDE DU EXCEL MANAGER
+				matLR[i][j] = exM.lireDoubleCellule(i+2, j);
 
 			}
 		}
@@ -47,7 +50,6 @@ public class DataBase {
 		for (int i=0; i<nombreDeRealisations; i++){
 
 			int rand = randomInt(0,uniqueInstance.nombreDeJours-1);
-
 			for (int j=0 ; j<nombreDActifs ; j++){
 
 				matS[i][j] = matLR[rand][j];
@@ -56,10 +58,12 @@ public class DataBase {
 		}
 
 
-		uniqueInstance.nombreDActifs = nombreDActifs;
 		uniqueInstance.setMatriceDesLogReturns(matLR);
 		uniqueInstance.setMatriceDesScenarios(matS);
 
+		//printDoubleMatrix(uniqueInstance.matriceDesLogReturns);
+		printDoubleMatrix(uniqueInstance.matriceDesScenarios);
+		
 	}
 
 	public static int randomInt (int deb, int fin){
@@ -82,6 +86,19 @@ public class DataBase {
 
 	public void setMatriceDesScenarios(double[][] matriceDesScenarios) {
 		this.matriceDesScenarios = matriceDesScenarios;
+	}
+	
+	public static void printDoubleMatrix(double[][] twoDm) {
+		System.out.println("=================================================================");
+		for(double[] row : twoDm) {
+			for (double i : row) {
+				System.out.print(i);
+				System.out.print("\t");
+			}
+			System.out.println();
+		}
+		System.out.println("=================================================================");
+
 	}
 
 }

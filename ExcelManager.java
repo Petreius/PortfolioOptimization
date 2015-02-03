@@ -131,14 +131,14 @@ public class ExcelManager {
 
 		switch (cell.getCellType()) {
 		case Cell.CELL_TYPE_STRING:
-			System.out.println("Type String");
+			//System.out.println("Type String");
 			break;
 		case Cell.CELL_TYPE_NUMERIC:
 			if (DateUtil.isCellDateFormatted(cell)) {
-				System.out.println(cell.getDateCellValue());
+			//	System.out.println(cell.getDateCellValue());
 			} else {
-				System.out.println("Type Numerique");
-				System.out.println(cell.getNumericCellValue());
+			//	System.out.println("Type Numerique");
+			//	System.out.println(cell.getNumericCellValue());
 				retour = cell.getNumericCellValue();
 			}
 			break;

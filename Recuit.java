@@ -36,8 +36,6 @@ public class Recuit {
 			if (currentPortfolio.getEnergy() < bestPortfolio.getEnergy()) {
 				bestPortfolio = currentPortfolio.clone();
 			}
-			System.out.println("temp " + temperatureRecuit);
-			System.out.println(" energie " + currentPortfolio.getEnergy());
 			temperatureRecuit *= 1-refroidissement;
 		}
 		
