@@ -1,21 +1,58 @@
 
 public class Portfolio {
 
-	private double[] pourcentages;
+	private double[] percentages;
 	private double var;
 	
 	public Portfolio(double[] pourcentages){
-		this.setPourcentages(pourcentages);
+		this.setPercentages(pourcentages);
 		this.setVar(0);
 		//A MODIFIER SELON LE CALCUL DE LA VAR
 	}
+	
+	public Portfolio(){
+		double[] randPercentages = new double[DataBase.nombreDActifs];
+		double sum = 0;
+		for (int i=0;i<randPercentages.length-1;i++){
+			randPercentages[i]=1/randPercentages.length;
+			sum = sum + randPercentages[i];
+		}
+		randPercentages[randPercentages.length-1] = 1-sum;
+		
+		this.setPercentages(randPercentages);
+		this.setVar(0);
+		//A MODIFIER SELON LE CALCUL DE LA VAR
+	}
+	
 
-	public double[] getPourcentages() {
-		return pourcentages;
+	public double getEnergy() {
+		//A MODIFIER SELON LE CALCUL DE L ENERGIE
+		return 0;
+	}
+	
+	public double getReturn() {
+		//A MODIFIER SELON LE CALCUL DU RETOUR
+		return 0;
 	}
 
-	public void setPourcentages(double[] pourcentages) {
-		this.pourcentages = pourcentages;
+	
+	public void calculateVar(){
+		double var = 0;
+		//A MODIFIER SELON LE CALCUL DE LA VAR
+		this.setVar(var);;
+	}
+	
+	public Portfolio clone(){
+		Portfolio q = new Portfolio(this.getPercentages());
+		return q;
+	}
+
+	public double[] getPercentages() {
+		return percentages;
+	}
+
+	public void setPercentages(double[] pourcentages) {
+		this.percentages = pourcentages;
 	}
 
 	public double getVar() {

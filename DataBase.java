@@ -1,7 +1,7 @@
 import java.io.IOException;
 
 
-public class BDD {
+public class DataBase {
 
 	/* Classe qui reprend les différents paramètres du problème, dans le but d'un 
 	 * programme facilement adaptable, les methodes des autres classes appelleront
@@ -19,9 +19,9 @@ public class BDD {
 	private static double[][] matriceDesScenarios;
 
 	
-	public BDD(int nombreDActifs, int nombreDeJours, int nombreDeRealisations) throws IOException{
+	public DataBase(int nombreDActifs, int nombreDeJours, int nombreDeRealisations) throws IOException{
 
-		BDD.nombreDActifs = nombreDActifs;
+		DataBase.nombreDActifs = nombreDActifs;
 
 		double [][] matLR = new double[nombreDeJours][nombreDActifs];
 		double [][] matS = new double[nombreDeRealisations][nombreDActifs];
@@ -50,8 +50,8 @@ public class BDD {
 		}
 
 
-		BDD.setMatriceDesLogReturns(matLR);
-		BDD.setMatriceDesScenarios(matS);
+		DataBase.setMatriceDesLogReturns(matLR);
+		DataBase.setMatriceDesScenarios(matS);
 
 	}
 	
@@ -66,7 +66,7 @@ public class BDD {
 	}
 
 	public static void setMatriceDesLogReturns(double[][] matriceDesLogReturns) {
-		BDD.matriceDesLogReturns = matriceDesLogReturns;
+		DataBase.matriceDesLogReturns = matriceDesLogReturns;
 	}
 
 	public static double[][] getMatriceDesScenarios() {
@@ -74,7 +74,7 @@ public class BDD {
 	}
 
 	public static void setMatriceDesScenarios(double[][] matriceDesScenarios) {
-		BDD.matriceDesScenarios = matriceDesScenarios;
+		DataBase.matriceDesScenarios = matriceDesScenarios;
 	}
 
 }
