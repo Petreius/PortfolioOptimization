@@ -17,7 +17,7 @@ public class Portfolio {
 			randPercentages[i]= (double)((int)(1000*(1.0/(randPercentages.length))))/1000.0;
 			sum = sum + ((double)((int)(1000*randPercentages[i])))/1000.0;
 		}
-		randPercentages[randPercentages.length-1] = 1-sum;
+		randPercentages[randPercentages.length-1] = (double)((int)(1000*(1-sum)))/1000.0;
 		
 		this.setPercentages(randPercentages);
 		this.setVar(0);
