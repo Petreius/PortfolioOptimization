@@ -62,6 +62,16 @@ public class YahooFinanceHttp {
             }catch(IOException e){
                 System.out.println(e.getMessage());
             }
+            // Je trouve plus intuitif d'avoir en position "0" les plus anciennes donnees.
+            // intuitivement rn = ln(rn/r(n-1)) et pas l'inverse!
+          
+          Collections.reverse(dateStrList);
+          Collections.reverse(openList);
+          Collections.reverse(highList);
+          Collections.reverse(lowList);
+          Collections.reverse(closeList);
+          Collections.reverse(volumeList);
+          Collections.reverse(adjCloseList);
        }
  
          //return the data
