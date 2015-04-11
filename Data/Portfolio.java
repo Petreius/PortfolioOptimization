@@ -2,7 +2,7 @@ package Data;
 
 public class Portfolio {
 	private double[] weights;
-	// TODO private double[] expectedLogReturn;
+	private double[] expectedLogReturn;
 	private double[] expectedRawReturn;
 
 	public Portfolio(Data data){
@@ -21,8 +21,33 @@ public class Portfolio {
 
 		// On calcule les RawReturns du portefeuille initial
 		this.expectedRawReturn = computeRawReturn(data, weights);
+		// On calcule les LogReturns du portefeuille initial
+		this.expectedLogReturn = computeLogReturn(data, weights);
 	}
 
+	public double[] computeLogReturn(Data data, double[] weights){
+		double expectedLogReturn[] = new double[data.getMQuotes().length];
+		double dayAValue = 0.0;
+		double dayBValue = 0.0;
+		for(int i = 0; i < data.getMQuotes().length-1; i++){
+			for(int j = 0; j < data.getMQuotes()[0].length; j++){
+				dayAValue += weights[j]*data.getMQuotes()[i][j];
+				dayBValue += weights[j]*data.getMQuotes()[i+1][j];
+			}
+			if(dayAValue != 0.0 && dayBValue != 0.0){
+			expectedLogReturn[i] = Data.Round(Math.log(dayBValue/dayAValue),4);
+			dayAValue = 0;
+			dayBValue = 0;
+			}
+			else{
+			expectedLogReturn[i] = 0.0;
+			dayAValue = 0;
+			dayBValue = 0;
+			}
+		}
+		return expectedLogReturn;
+	}
+	
 	public double[] computeRawReturn(Data data, double[] weights){
 		double expectedRawReturn[] = new double[data.getMQuotes().length];
 		for(int i = 0; i < data.getMQuotes().length-1; i++){
@@ -40,5 +65,9 @@ public class Portfolio {
 
 	public double[] getExpectedRawReturn(){
 		return this.expectedRawReturn;
+	}
+	
+	public double[] getExpectedLogReturn(){
+		return this.expectedLogReturn;
 	}
 }
