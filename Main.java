@@ -48,6 +48,9 @@ public class Main {
         // Portfolio est un objet qui contient les poids de chaque investissement et les rendements associés pour chaque jour de trading (histogramme...)
         Portfolio portfolio = new Portfolio(data);
         
+        // Creation d'une valueAtRisk historique
+        ValueAtRisk valueAtRisk = new ValueAtRisk(portfolio.getExpectedRawReturn(),5.0);
+       
         // Test
     	System.out.println("Voici les prix Apple pour ces 3 jours: "+data.getMQuotes()[0][0]+" , "+data.getMQuotes()[1][0]+" , "+data.getMQuotes()[2][0]);
     	System.out.println("Voici les retours associes: "+data.getMRawReturns()[0][0]+" , "+data.getMRawReturns()[1][0]);
@@ -57,7 +60,8 @@ public class Main {
     	System.out.println("Voici les retours associes: "+data.getMRawReturns()[0][2]+" , "+data.getMRawReturns()[1][2]);
     	System.out.println("Voici la repartition de votre portefeuille: "+portfolio.getWeights()[0]+" , "+portfolio.getWeights()[1]+" , "+portfolio.getWeights()[2]);
     	System.out.println("Les retours de votre portefeuille sont donc: "+portfolio.getExpectedRawReturn()[0]+" , "+portfolio.getExpectedRawReturn()[1]);
-    	
+    	System.out.println("Les retours logarithmiques de votre portefeuille: "+portfolio.getExpectedLogReturn()[0]+" , "+portfolio.getExpectedLogReturn()[1]);
+    	System.out.println("La V@R de votre portefeuille est "+valueAtRisk.getValueAtRisk());
     }
  
 }
