@@ -1,107 +1,129 @@
 package Data;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
+import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
-import YahooFinance.*;
+public class Portfolio{
+	private double[] weights;
+	private double[] expectedLogReturn;
+	private double[] expectedRawReturn;
+	private double valueAtRisk;
+	
+	public Portfolio(Data data){
+		double[] weights = new double[data.getMQuotes()[0].length];
+		// TODO double[] expectedLogReturn = new double[data.getMQuotes().length];
 
-public class Data {
+		// On procede a un investissement equireparti
+		weights[data.getMQuotes()[0].length-1] = 1.0; // le dernier actif complète pour avoir une somme à 1
+		for(int i = 0; i < data.getMQuotes()[0].length-1; i++){
+			weights[i] = Data.Round(1.0/(data.getMQuotes()[0].length),4);
+			weights[data.getMQuotes()[0].length-1] -= weights[i];
+		}
+		weights[data.getMQuotes()[0].length-1] = Data.Round(weights[data.getMQuotes()[0].length-1],4);
+		this.weights = weights;
 
-	private double[][] quoteMatrix;
-	private double[][] logReturnsMatrix;
-	private double[][] rawReturnsMatrix;
-
-	public Data(ArrayList<YahooFinanceHttp> tickersList){
-		tickersList = AutoScaling(tickersList);
-		System.out.println("nouvelle de date de début : "+tickersList.get(0).getDate().get(0));
-		double[][] quoteMatrix = new double[tickersList.get(0).getAdjClose().size()][tickersList.size()];
-		for(int i = 0; i < tickersList.size(); i++){
-			for(int j = 0; j < tickersList.get(i).getAdjClose().size(); j++){
-				quoteMatrix[j][i] = tickersList.get(i).getAdjClose().get(j);
+		// On calcule les RawReturns du portefeuille initial
+		this.expectedRawReturn = computeRawReturn(data, weights);
+		// On calcule les LogReturns du portefeuille initial
+		this.expectedLogReturn = computeLogReturn(data, weights);
+		// Calcul de la VAR avec les RawReturns
+		this.valueAtRisk = new ValueAtRisk(this.expectedRawReturn, 5.0).getVARValue();
+	}
+	
+	public Portfolio(double[] weights){
+		this.setWeights(weights);
+		//A MODIFIER SELON LE CALCUL DE LA VAR
+	}
+	
+	public Portfolio clone(){
+		double[] clonedWeights = new double[this.getWeights().length];
+		for(int i = 0; i < this.getWeights().length; i++){
+			clonedWeights[i] = this.getWeights()[i];
+		}
+		Portfolio clone = new Portfolio(clonedWeights);
+		return clone;
+	}
+	
+	public double[] computeLogReturn(Data data, double[] weights){
+		double expectedLogReturn[] = new double[data.getMQuotes().length];
+		double dayAValue = 0.0;
+		double dayBValue = 0.0;
+		for(int i = 0; i < data.getMQuotes().length-1; i++){
+			for(int j = 0; j < data.getMQuotes()[0].length; j++){
+				dayAValue += weights[j]*data.getMQuotes()[i][j];
+				dayBValue += weights[j]*data.getMQuotes()[i+1][j];
+			}
+			if(dayAValue != 0.0 && dayBValue != 0.0){
+			expectedLogReturn[i] = Data.Round(Math.log(dayBValue/dayAValue),4);
+			dayAValue = 0;
+			dayBValue = 0;
+			}
+			else{
+			expectedLogReturn[i] = 0.0;
+			dayAValue = 0;
+			dayBValue = 0;
 			}
 		}
-		this.quoteMatrix = quoteMatrix;
-		this.logReturnsMatrix = computeLogReturns(quoteMatrix);
-		this.rawReturnsMatrix = computeRawReturns(quoteMatrix);
+		return expectedLogReturn;
+	}
+	
+	public double[] computeRawReturn(Data data, double[] weights){
+		double expectedRawReturn[] = new double[data.getMQuotes().length];
+		for(int i = 0; i < data.getMQuotes().length-1; i++){
+			for(int j = 0; j < data.getMQuotes()[0].length; j++){
+				expectedRawReturn[i] += weights[j]*data.getMRawReturns()[i][j];
+			}
+			expectedRawReturn[i] = Data.Round(expectedRawReturn[i],4);
+		}
+		return expectedRawReturn;
+	}
+	
+	public double getEnergy(){
+		ValueAtRisk valueAtRisk = new ValueAtRisk(this.expectedRawReturn, 5.0);
+		return valueAtRisk.getVARValue();
+	}
+	
+	public double[] getWeights(){
+		return this.weights;
 	}
 
-	// Pour eviter tout comportement indetermine, AutoScaling adapte la fenetre d observation
-	public ArrayList<YahooFinanceHttp> AutoScaling(ArrayList<YahooFinanceHttp> tickersList){
-		ArrayList<Integer> timeLength = new ArrayList<Integer>();
-		int minLength = 0;
-		for(int i = 0; i < tickersList.size(); i++){
-			timeLength.add(tickersList.get(i).getDate().size());
-		}
-		minLength = (int) Collections.min(timeLength);
-		for(int i = 0; i < tickersList.size(); i++){
-			int length = tickersList.get(i).getDate().size();
-			for(int j = 0; j < length-minLength; j++){
-				tickersList.get(i).getDate().remove(0);
-				tickersList.get(i).getAdjClose().remove(0);
-				tickersList.get(i).getVolume().remove(0);
-				tickersList.get(i).getOpen().remove(0);
-				tickersList.get(i).getClose().remove(0);
-				tickersList.get(i).getHigh().remove(0);
-				tickersList.get(i).getLow().remove(0);
+	public double[] getExpectedRawReturn(){
+		return this.expectedRawReturn;
+	}
+	
+	public double[] getExpectedLogReturn(){
+		return this.expectedLogReturn;
+	}
+	
+	public double getValueAtRisk(){
+		return this.valueAtRisk;
+	}
+	
+	public void setWeights(double[] weights) {
+		this.weights = weights;
+	}
+	
+	public void setExpectedRawReturn(Data data, double[] weights){
+		this.expectedRawReturn = computeRawReturn(data, weights);
+	}
+	
+	public void setExpectedLogReturn(Data data, double[] weights){
+		this.expectedLogReturn = computeLogReturn(data, weights);
+	}
+	
+	public void setValueAtRisk(double[] expectedReturn){
+		Percentile percentile = new Percentile();
+		this.valueAtRisk = Data.Round(percentile.evaluate(expectedReturn, 5.0),4);
+	}
+	
+	public String toString(){
+		String strWeights = "[";
+		for(int i=0; i < this.weights.length; i++){
+			if(i != this.weights.length-1){
+			strWeights += this.weights[i]+",";
+			} else{
+				strWeights += this.weights[this.weights.length-1]+"]";
 			}
 		}
-		return tickersList;
-	}
-
-	private double[][] computeLogReturns(double[][] quoteMatrix){
-		double[][] logReturnsMatrix = new double[quoteMatrix.length-1][quoteMatrix[0].length];
-		int warningNullPrices = -1;
-		for(int j = 0; j < quoteMatrix[0].length; j++){
-			for(int i = 0; i < quoteMatrix.length-1; i++){
-				if(quoteMatrix[i+1][j] != 0.0 && quoteMatrix[i][j] != 0.0){
-					logReturnsMatrix[i][j] = Round(Math.log(quoteMatrix[i+1][j]/quoteMatrix[i][j]),4);
-				}
-				else{ 
-					if(warningNullPrices != j){
-						System.out.println("ATTENTION certaines cotations sont nulles sur cet intervalle de temps pour le ticker numero "+j);
-						warningNullPrices = j;
-					}
-					logReturnsMatrix[i][j] = 0.0;
-				}
-			}
-		}
-		return logReturnsMatrix;
-	}
-
-	private double[][] computeRawReturns(double[][] quoteMatrix){
-		double[][] rawReturnsMatrix = new double[quoteMatrix.length-1][quoteMatrix[0].length];
-		for(int j = 0; j < quoteMatrix[0].length; j++){
-			for(int i = 0; i < quoteMatrix.length-1; i++){
-				if(quoteMatrix[i+1][j] != 0.0 && quoteMatrix[i][j] != 0.0){
-					rawReturnsMatrix[i][j] = Round((quoteMatrix[i+1][j]-quoteMatrix[i][j])/(quoteMatrix[i][j]),4);
-				}
-				else{ 
-					rawReturnsMatrix[i][j] = 0.0;
-				}
-			}
-		}
-		return rawReturnsMatrix;
-	}
-
-	public static double Round(double value, int places) {
-		if (places < 0) throw new IllegalArgumentException();
-
-		BigDecimal bd = new BigDecimal(value);
-		bd = bd.setScale(places, RoundingMode.HALF_UP);
-		return bd.doubleValue();
-	}
-
-	public double[][] getMQuotes(){
-		return quoteMatrix;
-	}
-
-	public double[][] getMLogReturns(){
-		return logReturnsMatrix;
-	}
-
-	public double[][] getMRawReturns(){
-		return rawReturnsMatrix;
+		return strWeights;
 	}
 }
