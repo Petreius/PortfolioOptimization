@@ -1,11 +1,11 @@
-package data;
+package Data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import yahooFinance.*;
+import YahooFinance.*;
 
 public class Data {
 

@@ -1,10 +1,9 @@
-package yahooFinance;
+package YahooFinance;
 
 // Basé sur le code de Aris David - Parser pour récupérer dans plusieurs ArrayList l'ensemble des donnees fournies par Yahoo Finance
 
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.io.*;
  
 public class YahooFinanceHttp {

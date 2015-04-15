@@ -1,6 +1,6 @@
-package mutation;
+package Recuit;
 
-import data.*;
+import Data.*;
 
 public class Mutation {
 	

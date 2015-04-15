@@ -1,4 +1,4 @@
-package data;
+package Data;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
 public class ValueAtRisk {

@@ -1,15 +1,14 @@
-package data;
+package Data;
 
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
 public class Portfolio{
-	static private double[] weights;
+	private double[] weights;
 	private double[] expectedLogReturn;
 	private double[] expectedRawReturn;
 	private double valueAtRisk;
 	
 	public Portfolio(Data data){
-		Data dataSet= data;
 		double[] weights = new double[data.getMQuotes()[0].length];
 		// TODO double[] expectedLogReturn = new double[data.getMQuotes().length];
 
@@ -30,14 +29,18 @@ public class Portfolio{
 		this.valueAtRisk = new ValueAtRisk(this.expectedRawReturn, 5.0).getVARValue();
 	}
 	
-	public Portfolio(double[] pourcentages){
-		this.setWeights(pourcentages);
+	public Portfolio(double[] weights){
+		this.setWeights(weights);
 		//A MODIFIER SELON LE CALCUL DE LA VAR
 	}
 	
 	public Portfolio clone(){
-		Portfolio q = new Portfolio(this.getWeights());
-		return q;
+		double[] clonedWeights = new double[this.getWeights().length];
+		for(int i = 0; i < this.getWeights().length; i++){
+			clonedWeights[i] = this.getWeights()[i];
+		}
+		Portfolio clone = new Portfolio(clonedWeights);
+		return clone;
 	}
 	
 	public double[] computeLogReturn(Data data, double[] weights){
@@ -80,7 +83,7 @@ public class Portfolio{
 	}
 	
 	public double[] getWeights(){
-		return Portfolio.weights;
+		return this.weights;
 	}
 
 	public double[] getExpectedRawReturn(){
@@ -96,7 +99,7 @@ public class Portfolio{
 	}
 	
 	public void setWeights(double[] weights) {
-		Portfolio.weights = weights;
+		this.weights = weights;
 	}
 	
 	public void setExpectedRawReturn(Data data, double[] weights){

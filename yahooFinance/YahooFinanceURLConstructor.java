@@ -1,4 +1,4 @@
-package yahooFinance;
+package YahooFinance;
 
 //Basé sur le code de Aris David - Construction de la requete Yahoo Finance pour un ticker et un intervalle de temps donne
 

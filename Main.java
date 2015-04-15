@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import yahooFinance.YahooFinanceHttp;
-import yahooFinance.YahooFinanceURLConstructor;
-import data.*;
-import mutation.*;
+import Recuit.Mutation;
+import YahooFinance.YahooFinanceHttp;
+import YahooFinance.YahooFinanceURLConstructor;
+import Data.*;
 
 public class Main {
     public static void main(String[] args) throws CloneNotSupportedException{
@@ -65,15 +65,23 @@ public class Main {
     	System.out.println("repartition initiale" + portfolio.toString());
     	Portfolio clonePortfolio = portfolio.clone();
     	
+    	System.out.println(portfolio != clonePortfolio);
     	System.out.println("repartition initiale du clone" + clonePortfolio.toString());
     	System.out.println("La V@R initiale de votre portefeuille est "+portfolio.getValueAtRisk());
     	System.out.println("La V@R initiale de votre portefeuille clone est "+clonePortfolio.getValueAtRisk());
     	
-    	double[] tableau = Mutation.buyAndSell(portfolio.getWeights());
-    	portfolio.setWeights(tableau);
-    	//portfolio = Mutation.buyAndSell(portfolio);
+    	double[] tableau = {0,0,0,0,0,0};
+    	//double[] weightsvector = portfolio.getWeights();
+    	
+    	//double[] tableauBidon = Mutation.buyAndSell(portfolio.getWeights());
+    	
+    	System.out.println(portfolio != clonePortfolio);
+    	System.out.println(portfolio.getClass() == clonePortfolio.getClass());
+    	System.out.println(portfolio.equals(clonePortfolio));
+
+    	portfolio.setWeights(Mutation.buyAndSell(portfolio.getWeights()));
     	System.out.println("repartition finale" + portfolio.toString());
-    	System.out.println("repartition finale du putain de clone " + clonePortfolio.toString());
+    	System.out.println("repartition finale du clone " + clonePortfolio.toString());
 
     	//Portfolio solution = Recuit.solution(data);
     }
