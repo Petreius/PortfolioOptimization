@@ -73,7 +73,7 @@ public class Main {
     	portfolio.setWeights(tableau);
     	//portfolio = Mutation.buyAndSell(portfolio);
     	System.out.println("repartition finale" + portfolio.toString());
-    	System.out.println("repartition finale du putain de clone " + clonePortfolio.toString());
+    	System.out.println("repartition finale du clone " + clonePortfolio.toString());
 
     	//Portfolio solution = Recuit.solution(data);
     }
