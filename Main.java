@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import Recuit.Mutation;
+import Recuit.Recuit;
 import YahooFinance.YahooFinanceHttp;
 import YahooFinance.YahooFinanceURLConstructor;
 import Data.*;
@@ -12,78 +13,53 @@ public class Main {
         Calendar startDate = Calendar.getInstance();
         //Date de debut
         startDate.set(Calendar.YEAR, 2014);
-        startDate.set(Calendar.MONTH,12); //Mois Jan = 0, Fev = 1...Dec = 11
-        startDate.set(Calendar.DATE, 14);
+        startDate.set(Calendar.MONTH,0); //Mois Jan = 0, Fev = 1...Dec = 11
+        startDate.set(Calendar.DATE, 01);
  
         Calendar endDate = Calendar.getInstance();
         //Date de fin
         endDate.set(Calendar.YEAR, 2015);
-        endDate.set(Calendar.MONTH, 3);
-        endDate.set(Calendar.DATE, 14);
+        endDate.set(Calendar.MONTH, 0);
+        endDate.set(Calendar.DATE, 01);
  
         // La tickersList contient l'ensemble des tickers que nos considérons et leur prix respectif sur la fenetre d'observation
         ArrayList<YahooFinanceHttp> tickersList = new ArrayList<YahooFinanceHttp>();
         
         // L'URL constructor permet de formuler la requete à Yahoo
-        YahooFinanceURLConstructor AAPL_URL = new YahooFinanceURLConstructor(startDate, endDate, "AAPL");
-        YahooFinanceURLConstructor GOOG_URL = new YahooFinanceURLConstructor(startDate, endDate, "GOOG");
-        YahooFinanceURLConstructor MSFT_URL = new YahooFinanceURLConstructor(startDate, endDate, "MSFT");
-        YahooFinanceURLConstructor BNPPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "BNP.PA");
-        YahooFinanceURLConstructor ORPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "OR.PA");
-        YahooFinanceURLConstructor EFRPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "FR.PA");
+        YahooFinanceURLConstructor ORAPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "ORA.PA");
+        YahooFinanceURLConstructor VIEPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "VIE.PA");
+        YahooFinanceURLConstructor CAPPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "CAP.PA");
+        YahooFinanceURLConstructor TECPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "TEC.PA");
+        YahooFinanceURLConstructor AIRPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "AIR.PA");
+        YahooFinanceURLConstructor GLEPA_URL = new YahooFinanceURLConstructor(startDate, endDate, "GLE.PA");
         
         System.out.println("Interroge Yahoo Finance...");
         
         // YahooFinanceHttp contient une colonne de la future tickersList
-        YahooFinanceHttp AAPL = new YahooFinanceHttp(AAPL_URL.constructURL()); 
-        YahooFinanceHttp GOOG = new YahooFinanceHttp(GOOG_URL.constructURL());
-        YahooFinanceHttp MSFT = new YahooFinanceHttp(MSFT_URL.constructURL());
-        YahooFinanceHttp BNPPA = new YahooFinanceHttp(BNPPA_URL.constructURL());
-        YahooFinanceHttp ORPA = new YahooFinanceHttp(ORPA_URL.constructURL());
-        YahooFinanceHttp EFRPA = new YahooFinanceHttp(EFRPA_URL.constructURL());
+        YahooFinanceHttp ORAPA = new YahooFinanceHttp(ORAPA_URL.constructURL()); 
+        YahooFinanceHttp VIEPA = new YahooFinanceHttp(VIEPA_URL.constructURL());
+        YahooFinanceHttp CAPPA = new YahooFinanceHttp(CAPPA_URL.constructURL());
+        YahooFinanceHttp TECPA = new YahooFinanceHttp(TECPA_URL.constructURL());
+        YahooFinanceHttp AIRPA = new YahooFinanceHttp(AIRPA_URL.constructURL());
+        YahooFinanceHttp GLEPA = new YahooFinanceHttp(GLEPA_URL.constructURL());
         
         System.out.println("Donnees recuperees avec succes");
         
         // On construit la tickersList en concaténant les colonnes
-        tickersList.add(AAPL);
-        tickersList.add(GOOG);
-        tickersList.add(MSFT);
-        tickersList.add(BNPPA);
-        tickersList.add(ORPA);
-        tickersList.add(EFRPA);
-        
-        // Data est un objet qui contient la matrice des prix et la matrice des log returns obtenues à partir de la tickersList
+        tickersList.add(ORAPA);
+        tickersList.add(VIEPA);
+        tickersList.add(CAPPA);
+        tickersList.add(TECPA);
+        tickersList.add(AIRPA);
+        tickersList.add(GLEPA);
+
         Data data = new Data(tickersList);
- 
-        // Portfolio est un objet qui contient les poids de chaque investissement et les rendements associés pour chaque jour de trading (histogramme...)
+
         Portfolio portfolio = new Portfolio(data);
         
-        // Creation d'une valueAtRisk historique
-        //ValueAtRisk valueAtRisk = new ValueAtRisk(portfolio.getExpectedRawReturn(),5.0);
-       
         // Test
-    	System.out.println("repartition initiale" + portfolio.toString());
-    	Portfolio clonePortfolio = portfolio.clone();
-    	
-    	System.out.println(portfolio != clonePortfolio);
-    	System.out.println("repartition initiale du clone" + clonePortfolio.toString());
-    	System.out.println("La V@R initiale de votre portefeuille est "+portfolio.getValueAtRisk());
-    	System.out.println("La V@R initiale de votre portefeuille clone est "+clonePortfolio.getValueAtRisk());
-    	
-    	double[] tableau = {0,0,0,0,0,0};
-    	//double[] weightsvector = portfolio.getWeights();
-    	
-    	//double[] tableauBidon = Mutation.buyAndSell(portfolio.getWeights());
-    	
-    	System.out.println(portfolio != clonePortfolio);
-    	System.out.println(portfolio.getClass() == clonePortfolio.getClass());
-    	System.out.println(portfolio.equals(clonePortfolio));
-
-    	portfolio.setWeights(Mutation.buyAndSell(portfolio.getWeights()));
-    	System.out.println("repartition finale" + portfolio.toString());
-    	System.out.println("repartition finale du clone " + clonePortfolio.toString());
-
-    	//Portfolio solution = Recuit.solution(data);
+    	System.out.println("portefeuille initial \n\n" + portfolio.toString()+"\n\n");
+    	Recuit.solution(data);
     }
  
 }
