@@ -93,6 +93,17 @@ public class Data {
 		return bd.doubleValue();
 	}
 
+	public String toStringAssetReturn(int index){
+		String strAssetReturn = "[";
+		for(int i=0; i < this.getMRawReturns().length; i++){
+			if(i != this.getMRawReturns().length-1){
+				strAssetReturn += this.getMRawReturns()[i][index]+"|";
+			} else{
+				strAssetReturn += this.getMRawReturns()[i][index]+"]";
+			}
+		}
+		return strAssetReturn;
+	}
 	public double[][] getMQuotes(){
 		return quoteMatrix;
 	}
