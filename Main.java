@@ -63,7 +63,7 @@ public class Main {
 		
 		// Test
 		System.out.println("portefeuille initial \n\n" + portfolio.toString()+"\n\n");
-		Portfolio bestPortfolio = c.solution(data,0.0012);
+		Portfolio bestPortfolio = c.solution(data,0.0012); // 2 ans d'observation, 6 actifs = 80 secondes chez moi... 0.0012 est le rendement visé
 		final returnGUI demo = new returnGUI("Best portfolio returns for Value at Risk 1 day", bestPortfolio.getPortfolioLogReturn(), 50);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
