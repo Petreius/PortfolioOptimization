@@ -12,7 +12,10 @@ public class Data {
 	private double[][] quoteMatrix;
 	private double[][] logReturnsMatrix;
 	private double[][] rawReturnsMatrix;
-
+	
+	// Data contient toutes les informations "utiles" (prix, log-return, retours arithmetiques) sous forme de tableaux 2D rectangulaires
+	// si on n'a pas le même nombre d'informations pour chaque jour (ex Apple remonte jusqu'à 1980, Microsoft jusqu'à 1987) alors on coupe
+	// à la plus récente date tous les actifs (Apple depuis 1987, Microsoft depuis 1987) -> autoscaling. La matrice des prix est donc rectangulaire.
 	public Data(ArrayList<YahooFinanceHttp> tickersList){
 		tickersList = AutoScaling(tickersList);
 		System.out.println("nouvelle de date de début : "+tickersList.get(0).getDate().get(0));
@@ -27,7 +30,7 @@ public class Data {
 		this.rawReturnsMatrix = computeRawReturns(quoteMatrix);
 	}
 
-	// Pour eviter tout comportement indetermine, AutoScaling adapte la fenetre d observation
+	// Pour eviter tout comportement indetermine, AutoScaling adapte la fenetre d observation (voir explication constructeur)
 	public ArrayList<YahooFinanceHttp> AutoScaling(ArrayList<YahooFinanceHttp> tickersList){
 		ArrayList<Integer> timeLength = new ArrayList<Integer>();
 		int minLength = 0;
@@ -50,13 +53,14 @@ public class Data {
 		return tickersList;
 	}
 
+	// calcule les log-returns sur la fenêtre d'observation pour chacun des actifs.
 	private double[][] computeLogReturns(double[][] quoteMatrix){
 		double[][] logReturnsMatrix = new double[quoteMatrix.length-1][quoteMatrix[0].length];
 		int warningNullPrices = -1;
 		for(int j = 0; j < quoteMatrix[0].length; j++){
 			for(int i = 0; i < quoteMatrix.length-1; i++){
 				if(quoteMatrix[i+1][j] != 0.0 && quoteMatrix[i][j] != 0.0){
-					logReturnsMatrix[i][j] = Round(Math.log(quoteMatrix[i+1][j]/quoteMatrix[i][j]),4);
+					logReturnsMatrix[i][j] = Math.log(quoteMatrix[i+1][j]/quoteMatrix[i][j]);
 				}
 				else{ 
 					if(warningNullPrices != j){
@@ -70,6 +74,7 @@ public class Data {
 		return logReturnsMatrix;
 	}
 
+	// calcule les retours arithmétiques sur la fenêtre d'observation pour chaque actif
 	private double[][] computeRawReturns(double[][] quoteMatrix){
 		double[][] rawReturnsMatrix = new double[quoteMatrix.length-1][quoteMatrix[0].length];
 		for(int j = 0; j < quoteMatrix[0].length; j++){
@@ -85,6 +90,7 @@ public class Data {
 		return rawReturnsMatrix;
 	}
 
+	// Méthode d'arrondi - à améliorer... temps de calcul prohibitif si utilisé répétitivement
 	public static double Round(double value, int places) {
 		if (places < 0) throw new IllegalArgumentException();
 
@@ -93,17 +99,20 @@ public class Data {
 		return bd.doubleValue();
 	}
 
+	// Affichage des Log-Returns d'un actif
 	public String toStringAssetReturn(int index){
 		String strAssetReturn = "[";
-		for(int i=0; i < this.getMRawReturns().length; i++){
-			if(i != this.getMRawReturns().length-1){
-				strAssetReturn += this.getMRawReturns()[i][index]+"|";
+		for(int i=0; i < this.getMLogReturns().length; i++){
+			if(i != this.getMLogReturns().length-1){
+				strAssetReturn += this.getMLogReturns()[i][index]+"|";
 			} else{
-				strAssetReturn += this.getMRawReturns()[i][index]+"]";
+				strAssetReturn += this.getMLogReturns()[i][index]+"]";
 			}
 		}
 		return strAssetReturn;
 	}
+	
+	// Setters, Getters
 	public double[][] getMQuotes(){
 		return quoteMatrix;
 	}
