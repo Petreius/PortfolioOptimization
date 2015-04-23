@@ -54,16 +54,25 @@ public class Main {
 		tickersList.add(TECPA);
 		tickersList.add(AIRPA);
 		tickersList.add(GLEPA);
-
+		
 		// On crée la tickerList (arrayList qui contient des infos sur tous les tickers (AdjClose, Date, Open, Close...) 
-		Data data = new Data(tickersList);
+		Data data = new Data(tickersList,1);
 		// On crée un portefeuille initiale (100% investi dans un actif aléatoire + données associées)
 		Portfolio portfolio = new Portfolio(data);
+		
 		Recuit c= new Recuit();
+		Extrapolation e = new Extrapolation();
+		// extrapolation de la value at risk sur "days" jours
+		// Le coefficient d'extrapolation correspond à la somme pondérée des coefficients de Hurst de chaque actif
+		int days = 10;
 		
 		// Test
 		System.out.println("portefeuille initial \n\n" + portfolio.toString()+"\n\n");
-		Portfolio bestPortfolio = c.solution(data,0.0012); // 2 ans d'observation, 6 actifs = 80 secondes chez moi... 0.0012 est le rendement visé
+		Portfolio bestPortfolio = c.solution(data,0.0012);
+		double[] portfolioLogReturns = bestPortfolio.getPortfolioLogReturn();
+		System.out.println("portfolio VaR 1 day = "+bestPortfolio.computeVAR(portfolioLogReturns,5));
+		System.out.println("portfolio VaR "+days+" days ="+e.computeAvgHurstCoefficient(days, data, 5, bestPortfolio.getWeights())*bestPortfolio.computeVAR(portfolioLogReturns, 5));
+		
 		final returnGUI demo = new returnGUI("Best portfolio returns for Value at Risk 1 day", bestPortfolio.getPortfolioLogReturn(), 50);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
@@ -71,4 +80,3 @@ public class Main {
 	}
 
 }
-
