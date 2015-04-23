@@ -1,5 +1,6 @@
 package Data;
 
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
 public class Portfolio{
@@ -7,6 +8,7 @@ public class Portfolio{
 	private double[] portfolioLogReturn;
 	private double[] portfolioRawReturn;
 	private double valueAtRisk;
+	
 	
 	// Un portefeuille c'est : un vecteur de poids (initialement, on investit tout dans un actif), des log-returns sur toute la
 	// fenêtre d'observation, la value at risk associée.
@@ -103,12 +105,12 @@ public class Portfolio{
 		valueAtRisk = percentile.evaluate(portfolioReturns, alpha);
 		return valueAtRisk;
 	}
-	
+
 	// calcule l'espérance du retour du portefeuille.
 	public double computeExpectedReturn(double[] portfolioReturns){
-		Percentile percentile = new Percentile();
+		Mean mean = new Mean();
 		double rendement = 0.0;
-		rendement = percentile.evaluate(portfolioReturns, 50);
+		rendement = mean.evaluate(portfolioReturns);
 		return rendement;
 	}
 
@@ -123,7 +125,7 @@ public class Portfolio{
 	public double getEnergy(double targetReturn){
 		double ExpectedReturn = computeExpectedReturn(this.portfolioLogReturn);
 		double VAR = computeVAR(this.portfolioLogReturn, 5.0);
-		double energy = 10*Math.abs(targetReturn-ExpectedReturn)-VAR;
+		double energy = 100*Math.abs(targetReturn-ExpectedReturn)-VAR;
 		return energy;
 	}
 	
@@ -188,3 +190,4 @@ public class Portfolio{
 		return strWeights;
 	}
 }
+
